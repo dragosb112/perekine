@@ -12,7 +12,7 @@ function retrieveTweetsPromise(data){
         console.log('data null');
         deferred.reject(data);
     }
-
+    //small change
     return deferred.promise;
 }
 
