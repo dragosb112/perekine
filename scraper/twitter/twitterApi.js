@@ -27,7 +27,6 @@ var searchTweets = function (config, query, callback) {
         logger.error(err.allErrors);
         callback(query, tweets);
         return;
-        //process.exit(1);
       } else if (data && !err) {
         tweets = tweets.concat(data.statuses);
         //logger.info('query: ' + query + ', fetched ' + data.statuses.length + ' tweets, total tweets: ' + tweets.length);
@@ -35,7 +34,7 @@ var searchTweets = function (config, query, callback) {
         // no more data or rate limit reached on next call
         if (data.statuses.length === 0 || !data.search_metadata.next_results) {
           logger.info('twitter api: ' + query + ' finshed; total tweets fetched: ' + tweets.length);
-          callback(query, tweets);          
+          callback(query, tweets);
           return;
         }
 
@@ -85,6 +84,5 @@ function getRemainingCalls(config) {
 
 module.exports = {
   searchTweets: searchTweets,
-  searchTweetsDeferred: searchTweetsDeferred,
   getRemainingCalls: getRemainingCalls,
 };

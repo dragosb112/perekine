@@ -28,9 +28,9 @@ var minRemainingCalls = 10;
 var isRunning = false;
 
 // search tweets in the query
-function searchTweetsCurrentQueryList(queryList, currentCount) {
-    var query = queryList[currentCount].join(' ');
-    if (currentCount < queryList.length) {
+function searchTweetsCurrentQueryList(queryList) {
+    var query = queryList[queryCount].join(' ');
+    if (queryCount < queryList.length - 1) {
         queryCount++;
     } else {
         queryCount = 0;
@@ -64,7 +64,7 @@ function getRemainingCallsSuccess(twitterApiStatus) {
     // if we can still make api calls
     if (twitterApiStatus.remaining > minRemainingCalls) {
         // search for tweets
-        searchTweetsCurrentQueryList(queryBuilder.queryList, queryCount);
+        searchTweetsCurrentQueryList(queryBuilder.queryList);
     }
     // otherwise set the timeout to the next reset time 
     else {
