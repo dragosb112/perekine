@@ -36,18 +36,15 @@ function searchTweetsCurrentQueryList(queryList, currentCount) {
         queryCount = 0;
     }
 
-    twitterApi.searchTweetsDeferred(config, query, true)
-        .then(searchTweetsSuccess, searchTweetsError);
+    twitterApi.searchTweets(config, query, storeTweetSearchResults);
 }
 
-function searchTweetsSuccess(tweets) {
-    logger.info('search tweets success');
-    //logger.info('query: ' + query);
-    logger.info('data: ' + tweets);
-}
-
-function searchTweetsError(error) {
-    logger.error(error);
+// function to wait and restart the search
+function restartSearch(waitMs) {
+    logger.info('waiting ' + waitMs + 'ms before next api call');
+    setTimeout(function () {
+        scrapeTwitter();
+    }, waitMs);
 }
 
 // store tweets from previous search
@@ -56,33 +53,29 @@ function storeTweetSearchResults(query, data) {
     logger.info('total tweets: ' + data.length);
     fs.writeFileSync(path + (output || 'output.json'), JSON.stringify(data, null, 2));
     logger.info('tweet scrape done for: ' + query);
-    //queryCount++;
+
+    // restart the search after tweets were storec
+    restartSearch(waitTimeoutDefaultMs);
 }
 
-
+// get remaining calls return success
 function getRemainingCallsSuccess(twitterApiStatus) {
     logger.info(twitterApiStatus);
-    var waitTimeoutMs = waitTimeoutDefaultMs;
     // if we can still make api calls
     if (twitterApiStatus.remaining > minRemainingCalls) {
-        logger.info('if path');
         // search for tweets
         searchTweetsCurrentQueryList(queryBuilder.queryList, queryCount);
     }
     // otherwise set the timeout to the next reset time 
     else {
-        logger.info('else path');
         var currentTicks = Date.now();
         var ticksUntilReset = twitterApiStatus.reset * 1000 - currentTicks;
-        waitTimeoutMs = ticksUntilReset;
+        var waitTimeoutMs = ticksUntilReset;
+        restartSearch(waitTimeoutMs);
     }
-
-    logger.info('waiting ' + waitTimeoutMs + 'ms before next api call');
-    setTimeout(function () {
-        scrapeTwitter();
-    }, waitTimeoutMs);
 }
 
+// get remaining calls return error
 function getRemainingCallsError(data) {
     logger.info(data);
     setTimeout(function () {
@@ -90,9 +83,7 @@ function getRemainingCallsError(data) {
     }, waitErrorTimeoutDefaultMs);
 }
 
-// Main App Loop
-// Checks the remaining calls (recusrsive)
-// On success searches twitter for queries
+// scrape twitter main controller function
 function scrapeTwitter() {
     if (isRunning) {
         twitterApi.getRemainingCalls(config)
@@ -100,6 +91,7 @@ function scrapeTwitter() {
     }
 }
 
+// switch for controlling the operation of this module
 function setIsRunning(value) {
     if (isRunning !== value) {
         isRunning = value;
