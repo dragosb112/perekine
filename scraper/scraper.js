@@ -17,7 +17,7 @@ var QueryBuild = require('./utilities/queryBuilder.js');
 var queryBuilder = new QueryBuild(twitterDictionary.twitterDictionary(), 3);
 
 //logger
-var logger = require('./utilities/logger.js');
+var logger = require('../common/logger.js');
 logger.info('twitter scraper init');
 
 // properties

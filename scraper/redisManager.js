@@ -1,6 +1,6 @@
 var redis = require('redis');
 var appManager = require('./appManager.js');
-var logger = require('./utilities/logger.js');
+var logger = require('../common/logger.js');
 
 var channelName = 'server';
 var subscriber = null; 

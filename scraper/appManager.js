@@ -1,4 +1,4 @@
-var logger = require('./utilities/logger.js');
+var logger = require('../common/logger.js');
 var scraper = require('./scraper.js');
 
 function startScraping(){

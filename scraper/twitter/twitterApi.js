@@ -1,6 +1,6 @@
 var Twit = require('twit');
 var q = require('q');
-var logger = require('../utilities/logger.js');
+var logger = require('../../common/logger.js');
 
 // twitter api call to search for -
 var searchTweets = function (config, query, callback) {
