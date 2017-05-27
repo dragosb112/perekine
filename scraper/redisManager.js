@@ -10,6 +10,7 @@ function initialise() {
     subscriber = redis.createClient();
     logger.info('redisManager: created subscriber client');
     subscriber.on('message', function (channel, message) {
+        logger.info('redisManager: message received: ' + message);
         if (channel === channelName) {
             switch (message) {
                 case '1':
