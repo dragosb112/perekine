@@ -15,3 +15,7 @@ wget -O ./server/public/javascripts/lib/angular.min.js.map "https://ajax.googlea
 
 #resolve npm dependencies
 npm install;
+
+# set permissions for run scripts
+chmod u+x ./run-dev.sh
+chmod u+x ./run-live.sh
