@@ -62,3 +62,6 @@ output/
 
 # config twitter
 config.js
+
+# client lib files
+server/public/javascripts/lib

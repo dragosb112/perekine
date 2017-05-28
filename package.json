@@ -4,7 +4,8 @@
   "description": "perekine system",
   "main": "app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node ./server/bin/www"
   },
   "repository": {
     "type": "git",
@@ -17,11 +18,17 @@
   },
   "homepage": "https://github.com/dragosb112/perekine#readme",
   "dependencies": {
+    "body-parser": "^1.17.2",
+    "cookie-parser": "^1.4.3",
+    "debug": "^2.6.8",
     "express": "^4.15.3",
+    "jade": "^1.11.0",
+    "morgan": "^1.8.2",
     "node": "0.0.0",
     "nodejs": "0.0.0",
     "q": "^1.5.0",
     "redis": "^2.7.1",
+    "serve-favicon": "^2.4.3",
     "twit": "^2.2.5",
     "winston": "^2.3.1"
   }
