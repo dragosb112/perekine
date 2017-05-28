@@ -7,27 +7,40 @@
 var app = require('../app');
 var debug = require('debug')('server:server');
 var http = require('http');
-
+var processArgs = require('../../common/processArgs.js');
+var logger = require('../../common/logger.js');
+var publicIp = require('public-ip');
+var liveMode = false;
+var server = null;
 /**
  * Get port from environment and store in Express.
  */
 
+var ipAddress = null;
 var port = normalizePort(process.env.PORT || '3000');
 app.set('port', port);
+
+if (processArgs[2] && processArgs[2] === 'live') {
+  logger.info('### WWW: SYSTEM MODE IS LIVE! ###');
+  liveMode = true;
+} else {
+  logger.info('### WWW: SYSTEM MODE IS DEV! ###');
+}
+
 
 /**
  * Create HTTP server.
  */
 
-var server = http.createServer(app);
+if (!liveMode) {
+  initialiseServer();
+} else {
+  publicIp.v4()
+    .then(ip => {
+      initialiseServer(ip);
+    });
+}
 
-/**
- * Listen on provided port, on all network interfaces.
- */
-
-server.listen(port);
-server.on('error', onError);
-server.on('listening', onListening);
 
 /**
  * Normalize a port into a number, string, or false.
@@ -58,9 +71,9 @@ function onError(error) {
     throw error;
   }
 
-  var bind = typeof port === 'string'
-    ? 'Pipe ' + port
-    : 'Port ' + port;
+  var bind = typeof port === 'string' ?
+    'Pipe ' + port :
+    'Port ' + port;
 
   // handle specific listen errors with friendly messages
   switch (error.code) {
@@ -83,8 +96,29 @@ function onError(error) {
 
 function onListening() {
   var addr = server.address();
-  var bind = typeof addr === 'string'
-    ? 'pipe ' + addr
-    : 'port ' + addr.port;
+  var bind = typeof addr === 'string' ?
+    'pipe ' + addr :
+    'port ' + addr.port;
   debug('Listening on ' + bind);
+}
+
+/**
+ * Initialise server function 
+ */
+function initialiseServer(publicIp) {
+  server = http.createServer(app);
+  var ip = null;
+  if (publicIp) {
+    ip = publicIp;
+  } else {
+    ip = '127.0.0.1';
+  }
+
+  /**
+   * Listen on provided port, on all network interfaces.
+   */
+  server.listen(port, ip);
+  server.on('error', onError);
+  server.on('listening', onListening);
+
 }

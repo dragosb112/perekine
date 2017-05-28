@@ -15,7 +15,7 @@
             "type": "node",
             "request": "launch",
             "name": "server",
-            "program": "${workspaceRoot}/server/app.js",
+            "program": "${workspaceRoot}/server/bin/www",
             "cwd": "${workspaceRoot}/server"
         },
         {
