@@ -5,4 +5,14 @@ block content
   p Welcome to #{title}
 
   div(ng-controller='indexCtrl')
-      button(ng-click="startScraper()") Start Scraper
+    div
+      form(action='/scrapeStart', method='get')
+        input(type='submit', value='Scrape Start')
+
+    div
+      form(action='/scrapeStop', method='get')
+        input(type='submit', value='Scrape Stop')
+
+    div
+      form(action='/scrapeQuit', method='get')
+        input(type='submit', value='Scrape Quit')
