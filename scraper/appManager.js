@@ -24,9 +24,16 @@ function quitApp() {
     process.exit(1);
 }
 
+function setScraperQuery(queryString){
+    stopScraping();
+    logger.info('appManager: scrape query set to: ' + queryString);
+    scraper.setScraperQuery(queryString);
+}
+
 module.exports = {
     startScraping: startScraping,
     stopScraping: stopScraping,
     resumeScraping: resumeScraping,
-    quitApp: quitApp
+    quitApp: quitApp,
+    setScraperQuery: setScraperQuery
 };

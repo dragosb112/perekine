@@ -18,3 +18,12 @@ exports.scrapeQuitCallback = function(req, res) {
     serverPublish.sendMessage(serverPublish.serverOperations.quitScraper);
     res.redirect('/');
 };
+
+exports.scrapeSetQuery = function(req, res){
+    logger.info('scraperController: scrapeSetQuery');
+    if(req.query.scrapeQuery != null){
+        var message = serverPublish.serverOperations.setScraperQuery + ' ' + req.query.scrapeQuery;
+        serverPublish.sendMessage(message);
+    }
+    res.redirect('/');
+};

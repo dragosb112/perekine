@@ -102,8 +102,20 @@ function getIsRunning(){
     return isRunning;
 }
 
+/**
+ * Set scraper query from query string
+ */
+function setScraperQuery(queryString){
+    var queryArray = stringUtilities.stringToStringArray(queryString);
+    if(queryArray !== null){
+        queryBuilder = new QueryBuild(queryArray, 3);
+        var query = queryBuilder;        
+    }
+}
+
 module.exports = {
     setIsRunning: setIsRunning,
     getIsRunning: getIsRunning,
-    scrapeTwitter: scrapeTwitter
+    scrapeTwitter: scrapeTwitter,
+    setScraperQuery: setScraperQuery
 };
