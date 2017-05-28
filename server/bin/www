@@ -36,7 +36,7 @@ if (!liveMode) {
   initialiseServer();
 } else {
   publicIp.v4()
-    .then(ip => {
+    .then(ip => {      
       initialiseServer(ip);
     });
 }
@@ -120,5 +120,6 @@ function initialiseServer(publicIp) {
   server.listen(port, ip);
   server.on('error', onError);
   server.on('listening', onListening);
+  logger.info('WWW: server started on ' + ip + ':' + port);
 
 }
