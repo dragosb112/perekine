@@ -1,4 +1,8 @@
 var winston = require('winston');
+var processArgs = require('./processArgs.js');
+
+var outputPath = processArgs.Args2.outputPath; 
+
 
 var logger = new (winston.Logger)({
     transports: [
@@ -7,12 +11,12 @@ var logger = new (winston.Logger)({
         }),
         new (winston.transports.File)({
             name: 'debug-log',
-            filename: './output/logs/debug.log',
+            filename: outputPath + '/logs/debug.log',
             level: 'debug'
         }),
         new (winston.transports.File)({
             name: 'error-log',
-            filename: './output/logs/error.log',
+            filename: outputPath + '/logs/error.log',
             level: 'error'
         }),
     ]

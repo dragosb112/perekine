@@ -20,7 +20,7 @@ var ipAddress = null;
 var port = normalizePort(process.env.PORT || '3000');
 app.set('port', port);
 
-if (processArgs[2] && processArgs[2] === 'live') {
+if (processArgs.Args2.runMode === '-live') {
   logger.info('### WWW: SYSTEM MODE IS LIVE! ###');
   liveMode = true;
 } else {

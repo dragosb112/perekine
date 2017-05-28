@@ -1,5 +1,3 @@
-console.log('scraper init');
-
 // mode modules
 var fs = require('fs');
 var q = require('q');
@@ -7,7 +5,8 @@ var q = require('q');
 // twitter
 var config = require('./twitter/config.js');
 var twitterApi = require('./twitter/twitterApi.js');
-var path = './output/twitter/';
+var processArgs = require('../common/processArgs.js');
+var path = processArgs.Args2.outputPath + '/twitter/';
 
 // utilities
 var output = null;

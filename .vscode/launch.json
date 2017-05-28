@@ -9,14 +9,20 @@
             "request": "launch",
             "name": "scraper",
             "program": "${workspaceRoot}/scraper/app.js",
-            "cwd": "${workspaceRoot}/scraper"
+            "cwd": "${workspaceRoot}/scraper",
+            "args": [
+                "dev"
+            ]
         },
         {
             "type": "node",
             "request": "launch",
             "name": "server",
-            "program": "${workspaceRoot}/server/bin/www",
-            "cwd": "${workspaceRoot}/server"
+            "program": "${workspaceRoot}/server/bin/www",            
+            "cwd": "${workspaceRoot}/server",
+            "args":[
+                "dev"
+            ]
         },
         {
             "type": "node",
