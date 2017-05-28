@@ -7,9 +7,16 @@
         {
             "type": "node",
             "request": "launch",
-            "name": "Launch Program",
+            "name": "scraper",
             "program": "${workspaceRoot}/scraper/app.js",
             "cwd": "${workspaceRoot}/scraper"
+        },
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "server",
+            "program": "${workspaceRoot}/server/app.js",
+            "cwd": "${workspaceRoot}/server"
         },
         {
             "type": "node",

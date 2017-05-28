@@ -98,7 +98,13 @@ function setIsRunning(value) {
     }
 }
 
+// get isRunning property
+function getIsRunning(){
+    return isRunning;
+}
+
 module.exports = {
     setIsRunning: setIsRunning,
+    getIsRunning: getIsRunning,
     scrapeTwitter: scrapeTwitter
 };

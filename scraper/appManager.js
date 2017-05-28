@@ -1,23 +1,25 @@
 var logger = require('../common/logger.js');
 var scraper = require('./scraper.js');
 
-function startScraping(){
+function startScraping() {
     logger.info('appManager: startScraping');
+    var currentIsRunning = scraper.getIsRunning();
     scraper.setIsRunning(true);
-    scraper.scrapeTwitter();
-    
+    if (!currentIsRunning) {
+        scraper.scrapeTwitter();
+    }
 }
 
-function stopScraping(){
+function stopScraping() {
     logger.info('appManager: stopScraping');
     scraper.setIsRunning(false);
 }
 
-function resumeScraping(){
+function resumeScraping() {
     logger.info('appManager: resumeScraping');
 }
 
-function quitApp(){
+function quitApp() {
     logger.info('appManager: quitApp');
     process.exit(1);
 }
