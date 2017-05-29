@@ -1,7 +1,7 @@
 var redis = require('redis');
 var appManager = require('./appManager.js');
 var logger = require('../common/logger.js');
-var serverOperations = require('../../common/serverOperations.js');
+var serverOperations = require('../common/serverOperations.js');
 
 var channelName = 'server';
 var subscriber = null;
