@@ -1,6 +1,7 @@
 var redis = require('redis');
 var appManager = require('./appManager.js');
 var logger = require('../common/logger.js');
+var serverOperations = require('../../common/serverOperations.js');
 
 var channelName = 'server';
 var subscriber = null;
@@ -19,19 +20,19 @@ function initialise() {
         }
         if (channel === channelName) {
             switch (header) {
-                case '1':
+                case serverOperations.startScraper:
                     appManager.startScraping();
                     break;
-                case '2':
+                case serverOperations.stopScraper:
                     appManager.stopScraping();
                     break;
-                case '3':
+                case serverOperations.resumeScraper:
                     appManager.resumeScraping();
                     break;
-                case '4':
+                case serverOperations.quitScraper:
                     appManager.quitApp();
                     break;
-                case '5':
+                case serverOperations.setScraperQuery:
                     if (body) {
                         appManager.setScraperQuery(body);
                     }
