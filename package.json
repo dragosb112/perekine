@@ -23,6 +23,7 @@
     "debug": "^2.6.8",
     "express": "^4.15.3",
     "jade": "^1.11.0",
+    "javascript-state-machine": "^2.4.0",
     "morgan": "^1.8.2",
     "node": "0.0.0",
     "nodejs": "0.0.0",

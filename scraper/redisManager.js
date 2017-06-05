@@ -21,13 +21,13 @@ function initialise() {
         if (channel === channelName) {
             switch (header) {
                 case serverOperations.startScraper:
-                    appManager.startScraping();
+                    appManager.startScraper();
                     break;
                 case serverOperations.stopScraper:
-                    appManager.stopScraping();
+                    appManager.stopScraper();
                     break;
-                case serverOperations.resumeScraper:
-                    appManager.resumeScraping();
+                case serverOperations.pauseScraper:
+                    appManager.pauseScraper();
                     break;
                 case serverOperations.quitScraper:
                     appManager.quitApp();
@@ -36,7 +36,6 @@ function initialise() {
                     if (body) {
                         appManager.setScraperQuery(body);
                     }
-
                     break;
             }
         }

@@ -14,6 +14,7 @@ var stringUtilities = require('./utilities/stringUtilities');
 var twitterDictionary = require('./dictionary/twitterDictionary.js');
 var QueryBuild = require('./utilities/queryBuilder.js');
 var queryBuilder = new QueryBuild(twitterDictionary.twitterDictionary(), 3);
+var StateMachine = require('javascript-state-machine');
 
 //logger
 var logger = require('../common/logger.js');
@@ -25,6 +26,58 @@ var waitTimeoutDefaultMs = 2000;
 var waitErrorTimeoutDefaultMs = 5000;
 var minRemainingCalls = 10;
 var isRunning = false;
+
+var fsm = StateMachine.create({
+    initial: 'stopped',
+    events: [{
+            name: 'start',
+            from: ['stopped', 'running', 'paused'],
+            to: 'running'
+        },
+        {
+            name: 'stop',
+            from: ['running', 'paused', 'stopped'],
+            to: 'stopped'
+        },
+        {
+            name: 'pause',
+            from: 'running',
+            to: 'paused'
+        },
+    ],
+    callbacks: {
+        onstart: onStart,
+        onstop: onStop,
+        onpause: onPause,
+    }
+});
+
+/**
+ * onStart fsm callback
+ */
+function onStart() {
+    logger.info('scraper State: ' + fsm.current);
+    if (fsm.is('running')) {
+        twitterApi.getRemainingCalls(config)
+            .then(getRemainingCallsSuccess, getRemainingCallsError);
+    }
+}
+
+/**
+ * onStop fsm callback
+ */
+function onStop() {
+    logger.info('scraper State: ' + fsm.current);
+    queryCount = 0;
+}
+
+/**
+ * onPause fsm callback
+ */
+function onPause() {
+    logger.info('scraper State: ' + fsm.current);
+}
+
 
 // search tweets in the query
 function searchTweetsCurrentQueryList(queryList) {
@@ -42,7 +95,9 @@ function searchTweetsCurrentQueryList(queryList) {
 function restartSearch(waitMs) {
     logger.info('waiting ' + waitMs + 'ms before next api call');
     setTimeout(function () {
-        scrapeTwitter();
+        if(!fsm.is('stopped') && !fsm.is('paused')){
+         fsm.start();   
+        }        
     }, waitMs);
 }
 
@@ -98,18 +153,18 @@ function setIsRunning(value) {
 }
 
 // get isRunning property
-function getIsRunning(){
+function getIsRunning() {
     return isRunning;
 }
 
 /**
  * Set scraper query from query string
  */
-function setScraperQuery(queryString){
+function setScraperQuery(queryString) {
     var queryArray = stringUtilities.stringToStringArray(queryString);
-    if(queryArray !== null){
+    if (queryArray !== null) {
         queryBuilder = new QueryBuild(queryArray, 3);
-        var query = queryBuilder;        
+        var query = queryBuilder;
     }
 }
 
@@ -117,5 +172,8 @@ module.exports = {
     setIsRunning: setIsRunning,
     getIsRunning: getIsRunning,
     scrapeTwitter: scrapeTwitter,
-    setScraperQuery: setScraperQuery
+    setScraperQuery: setScraperQuery,
+    start: fsm.start,
+    stop: fsm.stop,
+    fsm: fsm
 };
