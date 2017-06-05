@@ -7,7 +7,7 @@ function quitApp() {
 }
 
 function setScraperQuery(queryString) {
-    stopScraping();
+    scraper.fsm.stop();
     logger.info('appManager: scrape query set to: ' + queryString);
     scraper.setScraperQuery(queryString);
 }
