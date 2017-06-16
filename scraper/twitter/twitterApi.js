@@ -2,7 +2,12 @@ var Twit = require('twit');
 var q = require('q');
 var logger = require('../../common/logger.js');
 
-// twitter api call to search for -
+/**
+ * search tweets
+ * @param {twitter app config} config 
+ * @param {word list to search for} query 
+ * @param {function to handle search results} callback 
+ */
 var searchTweets = function (config, query, callback) {
   var twitterClient = new Twit(config);
   logger.info('fetch from search/tweets with query ' + query);
@@ -64,6 +69,10 @@ var searchTweets = function (config, query, callback) {
 
 };
 
+/**
+ * get twitter status of remaining tweet searches
+ * @param {twitter app config} config 
+ */
 function getRemainingCalls(config) {
   var twitter = new Twit(config);
   var deferred = q.defer();

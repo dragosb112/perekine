@@ -1,7 +1,10 @@
-var app = angular.module('clientApp', []);
+var indexCtrl = function($scope){
 
-app.controller('indexCtrl', function($scope){
-    $scope.startScraper = function(){        
-        console.log('start scraper');
-    };
-});
+    console.log('index init');
+
+    $scope.input = 'test';
+};
+
+angular
+    .module('clientApp', [])
+    .controller('indexCtrl', indexCtrl);

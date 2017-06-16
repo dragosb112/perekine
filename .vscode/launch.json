@@ -10,6 +10,7 @@
             "name": "scraper",
             "program": "${workspaceRoot}/scraper/app.js",
             "cwd": "${workspaceRoot}/scraper",
+            "protocol":"legacy",
             "args": [
                 "dev"
             ]
@@ -20,6 +21,7 @@
             "name": "server",
             "program": "${workspaceRoot}/server/bin/www",            
             "cwd": "${workspaceRoot}/server",
+            "protocol":"legacy",
             "args":[
                 "dev"
             ]

@@ -1,9 +1,17 @@
+/**
+ * Logging system using winston library
+ */
+
 var winston = require('winston');
 var processArgs = require('./processArgs.js');
 
-var outputPath = processArgs.Args2.outputPath; 
+var outputPath = processArgs.outputPath; 
 
-
+/**
+ * configure winston
+ * console: only debug
+ * file: debug and error
+ */
 var logger = new (winston.Logger)({
     transports: [
         new (winston.transports.Console)({
@@ -22,21 +30,33 @@ var logger = new (winston.Logger)({
     ]
 });
 
+/**
+ * log info
+ * @param {string} message 
+ */
 function info(message){
     logger.info(message);
 }
 
+/**
+ * log debug
+ * @param {string} message 
+ */
 function debug(message){
     logger.debug(message);
 }
 
+/**
+ * log error
+ * @param {string} message 
+ * @param {err params} params 
+ */
 function error(message, params){
     if(params === null){
         logger.error(message);
     } else {
         logger.error(message, params);
     }
-    
 }
 
 module.exports = {

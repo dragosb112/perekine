@@ -1,12 +1,24 @@
+/**
+ * Redis server subscriber manager
+ * Subscirbes to server channel and redirects 
+ * messages through the process
+ */
+
 var redis = require('redis');
-var appManager = require('./appManager.js');
+var AppManager = require('./appManager');
 var logger = require('../common/logger.js');
 var serverOperations = require('../common/serverOperations.js');
+var config = require('./twitter/config');
 
 var channelName = 'server';
 var subscriber = null;
-
+var appManager2 = null;
+/**
+ * initialise redis subscriber to server channel
+ */
 function initialise() {
+    appManager = new AppManager();
+    appManager.initialise();
     logger.info('redisManager: initialise');
     subscriber = redis.createClient();
     logger.info('redisManager: created subscriber client');
@@ -21,20 +33,34 @@ function initialise() {
         if (channel === channelName) {
             switch (header) {
                 case serverOperations.startScraper:
-                    appManager.startScraper();
+                    if(body){
+                        appManager.startScraper(body);
+                    }        
                     break;
                 case serverOperations.stopScraper:
-                    appManager.stopScraper();
+                    if(body){
+                        appManager.stopScraper(body);
+                    }
+                    
                     break;
                 case serverOperations.pauseScraper:
-                    appManager.pauseScraper();
+                    if(body){
+                        appManager.pauseScraper(body);
+                    }                 
                     break;
                 case serverOperations.quitScraper:
                     appManager.quitApp();
                     break;
                 case serverOperations.setScraperQuery:
+                    logger.error('setScraperQuery - redis functionality not implemented');
                     if (body) {
-                        appManager.setScraperQuery(body);
+                        //appManager.setScraperQuery(body);
+                    }
+                    break;
+                case serverOperations.createScraperInstance:
+                    if (body) {
+                        var scraperInstanceId = body;
+                        appManager.createScraper(config, scraperInstanceId);
                     }
                     break;
             }

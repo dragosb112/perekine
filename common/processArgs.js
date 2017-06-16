@@ -1,19 +1,19 @@
-var processArgs = [];
-var processArgs2 = {};
+// Process Arguments 
 
-process.argv.forEach((val, index) => {
-    processArgs.push(val);
-});
+var args = {};
 
+/**
+ * set runMode
+ * dev = run server on localhost
+ * live = run server on public ip
+ */
 if (process.argv[2]) {
-    processArgs2.runMode = process.argv[2];
+    args.runMode = process.argv[2];
 }
 
+/**
+ * set output path (logger, scraper)
+ */
+args.outputPath = process.argv[3] || "./output";
 
-processArgs2.outputPath = process.argv[3] || "./output";
-
-module.exports = {
-    Args: processArgs,
-    Args2: processArgs2
-
-};
+module.exports = args;

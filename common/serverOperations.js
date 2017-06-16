@@ -4,5 +4,6 @@ module.exports = {
     stopScraper: '2',
     pauseScraper: '3',
     quitScraper: '4',
-    setScraperQuery: '5'
+    setScraperQuery: '5',
+    createScraperInstance: '6'
 };

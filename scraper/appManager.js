@@ -1,40 +1,76 @@
-var logger = require('../common/logger.js');
-var scraper = require('./scraper.js');
+/**
+ * Singleton class to handle app management
+ * TODO: research proper way to implement singletons
+ */
+var logger = require('../common/logger');
+var Scraper = require('./scraperInstance');
 
-function quitApp() {
-    logger.info('appManager: quitApp');
-    process.exit(1);
-}
+var singletonInstanced = false;
 
-function setScraperQuery(queryString) {
-    scraper.fsm.stop();
-    logger.info('appManager: scrape query set to: ' + queryString);
-    scraper.setScraperQuery(queryString);
-}
-
-function startScraper() {
-    if (!scraper.fsm.is('running')) {
-        scraper.fsm.start();
+var AppManager = function () {
+    if (!(this instanceof AppManager)) {
+        return new AppManager();
     }
-}
 
-function stopScraper() {
-    if (!scraper.fsm.is('stopped')) {
-        scraper.fsm.stop();
+    if (singletonInstanced === false) {
+        singletonInstanced = true;
+    } else {
+        logger.info('appManager instance already running. Cannot create another one');
+        return;
     }
-}
 
-function pauseScraper() {
-    if (!scraper.fsm.is('stopped') && !scraper.fsm.is('paused')) {
-        scraper.fsm.pause();
-    }
-}
+    var self = this;
+    this.scraperInstanceList = {};
 
-module.exports = {
-    quitApp: quitApp,
-    setScraperQuery: setScraperQuery,
-    startScraper: startScraper,
-    stopScraper: stopScraper,
-    pauseScraper: pauseScraper,
+    logger.info('appManager singleton initialised');
+
+    AppManager.prototype.initialise = function () {
+
+    };
+
+    AppManager.prototype.startScraper = function(instanceId) {
+        if(instanceId){
+            var scraper = self.scraperInstanceList[instanceId];
+            if(scraper){
+                scraper.start();
+            }    
+        }
+    };
+
+    AppManager.prototype.stopScraper = function(instanceId) {
+        if(instanceId){
+            var scraper = self.scraperInstanceList[instanceId];
+            if(scraper){
+                scraper.stop();
+            }    
+        }    
+    };
+
+    AppManager.prototype.pauseScraper = function(instanceId) {
+        if(instanceId){
+            var scraper = self.scraperInstanceList[instanceId];
+            if(scraper){
+                scraper.pause();
+            }    
+        }
+    };
+
+    AppManager.prototype.createScraper = function(config, instanceId) {
+        var newScraper = new Scraper(config, instanceId);
+        if(newScraper){
+            self.scraperInstanceList[instanceId] = newScraper;
+        } 
+    };
+
+    AppManager.prototype.setScraperQuery = function(instanceId, queryString){
+        if(instanceId && queryString){
+            var scraper = self.scraperInstanceList[instanceId];
+            if(scraper){
+                scraper.setScraperQuery(queryString);
+            }    
+        }
+    };
 
 };
+
+module.exports = AppManager;
