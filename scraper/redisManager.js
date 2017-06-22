@@ -9,16 +9,20 @@ var AppManager = require('./appManager');
 var logger = require('../common/logger.js');
 var serverOperations = require('../common/serverOperations.js');
 var config = require('./twitter/config');
+var ServerMessageProcessor = require('./serverMessageProcessor');
 
 var channelName = 'server';
 var subscriber = null;
 var appManager2 = null;
+var serverMessageProcessor = null;
 /**
  * initialise redis subscriber to server channel
  */
 function initialise() {
     appManager = new AppManager();
     appManager.initialise();
+    serverMessageProcessor = new ServerMessageProcessor();
+    serverMessageProcessor.initialise();
     logger.info('redisManager: initialise');
     subscriber = redis.createClient();
     logger.info('redisManager: created subscriber client');
@@ -29,32 +33,33 @@ function initialise() {
         if (message) {
             header = message.split(/ (.+)/)[0];
             body = message.split(/ (.+)/)[1];
+            var messageProcessed = serverMessageProcessor.process(message);
         }
-        if (channel === channelName) {
-            switch (header) {
+        if (channel === channelName && messageProcessed) {
+            switch (messageProcessed.messageType) {
                 case serverOperations.startScraper:
-                    if(body){
-                        appManager.startScraper(body);
+                    if(messageProcessed.scraperId){
+                        appManager.startScraper(messageProcessed.scraperId);
                     }        
                     break;
                 case serverOperations.stopScraper:
-                    if(body){
-                        appManager.stopScraper(body);
+                    if(messageProcessed.scraperId){
+                        appManager.stopScraper(messageProcessed.scraperId);
                     }
                     
                     break;
                 case serverOperations.pauseScraper:
-                    if(body){
-                        appManager.pauseScraper(body);
+                    if(messageProcessed.scraperId){
+                        appManager.pauseScraper(messageProcessed.scraperId);
                     }                 
                     break;
                 case serverOperations.quitScraper:
                     appManager.quitApp();
                     break;
                 case serverOperations.setScraperQuery:
-                    logger.error('setScraperQuery - redis functionality not implemented');
-                    if (body) {
-                        //appManager.setScraperQuery(body);
+                    //logger.error('setScraperQuery - redis functionality not implemented');
+                    if (messageProcessed.scraperId && messageProcessed.messageBody) {
+                        appManager.setScraperQuery(messageProcessed.scraperId, messageProcessed.messageBody);
                     }
                     break;
                 case serverOperations.createScraperInstance:

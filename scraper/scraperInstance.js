@@ -52,15 +52,15 @@ var Scraper = function (config, instanceId) {
 
     Scraper.prototype.start = function () {
         self.fsm.start();
-    }
+    };
 
     Scraper.prototype.stop = function () {
         self.fsm.stop();
-    }
+    };
 
     Scraper.prototype.pause = function () {
         self.fsm.pause();
-    }
+    };
 
     /**
      * set scraper query from query string
