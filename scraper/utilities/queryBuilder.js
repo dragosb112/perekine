@@ -1,10 +1,22 @@
-function QueryBuilder(dictionary, minSubset){
-    var queries = combine(dictionary, minSubset);
-    this.queryList = queries;
-};
+function QueryBuilder(dictionary, minSubset) {
 
-var combine = function(a, min) {
-    var fn = function(n, src, got, all) {
+    if (!(this instanceof QueryBuilder)) {
+        return new QueryBuilder(dictionary, minSubset);
+    }
+
+    var queries = combine(dictionary, minSubset);
+    
+    
+    var self = this;
+    this.queryList = queries;
+
+    QueryBuilder.prototype.getQueryList = function(){
+        return this.queryList;
+    };
+}
+
+var combine = function (a, min) {
+    var fn = function (n, src, got, all) {
         if (n === 0) {
             if (got.length > 0) {
                 all[all.length] = got;

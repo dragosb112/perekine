@@ -7,6 +7,17 @@
         {
             "type": "node",
             "request": "launch",
+            "name": "mongoose",
+            "program": "${workspaceRoot}/server/database/mongoose.js",
+            "cwd": "${workspaceRoot}/server/database",
+            "protocol": "legacy",
+            "args": [
+                "dev"
+            ]
+        },
+        {
+            "type": "node",
+            "request": "launch",
             "name": "scraper",
             "program": "${workspaceRoot}/scraper/app.js",
             "cwd": "${workspaceRoot}/scraper",

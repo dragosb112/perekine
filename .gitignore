@@ -64,5 +64,8 @@ output/
 *.cfg
 config.js
 
+# dev_cfs
+dev_cfgs
+
 # client lib files
 server/public/javascripts/lib

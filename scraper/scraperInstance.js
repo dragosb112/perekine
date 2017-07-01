@@ -6,8 +6,7 @@
 var fs = require('fs');
 var q = require('q');
 
-// twitter
-var _instanceId = -1;
+// twitter 
 var twitterApi = require('./twitter/twitterApi.js');
 var processArgs = require('../common/processArgs.js');
 var logger = require('../common/logger');
@@ -18,7 +17,7 @@ var twitterDictionary = require('./dictionary/twitterDictionary.js');
 
 var Scraper = function (config, instanceId) {
     if (!(this instanceof Scraper)) {
-        return new Scraper(config);
+        return new Scraper(config, instanceId);
     }
 
     //TODO: validate config
@@ -26,8 +25,6 @@ var Scraper = function (config, instanceId) {
     //validate instanceId
     if(!instanceId){
         logger.error('instanceId: ' + instanceId);
-        instanceId = _instanceId;
-        _instanceId++;
         //TODO: throw error
     }
 
@@ -51,16 +48,17 @@ var Scraper = function (config, instanceId) {
      */
 
     Scraper.prototype.start = function () {
-        self.fsm.start();
+        this.fsm.start();
     };
 
     Scraper.prototype.stop = function () {
-        self.fsm.stop();
+        this.fsm.stop();
     };
 
     Scraper.prototype.pause = function () {
-        self.fsm.pause();
+        this.fsm.pause();
     };
+
 
     /**
      * set scraper query from query string
@@ -69,7 +67,7 @@ var Scraper = function (config, instanceId) {
     Scraper.prototype.setScraperQuery = function(queryString) {
         var queryArray = stringUtilities.stringToStringArray(queryString);
         if (queryArray !== null) {
-            self.queryBuilder = new QueryBuild(queryArray, 3);
+            this.queryBuilder = new QueryBuild(queryArray, 3);
         }
     };
 
@@ -77,7 +75,7 @@ var Scraper = function (config, instanceId) {
      * return current fsm state
      */
     Scraper.prototype.getCurrentState = function() {
-        return self.fsm.current;
+        return this.fsm.current;
     };
 
     /**
@@ -86,7 +84,7 @@ var Scraper = function (config, instanceId) {
      */
     Scraper.prototype.isState = function(state) {
         if (state !== null) {
-            return self.fsm.is(state);
+            return this.fsm.is(state);
         }
     }
 
@@ -99,6 +97,7 @@ var Scraper = function (config, instanceId) {
      * onStart fsm callback
      */
     function onStart() {
+
         logger.info('scraperInstance' + instanceId + ': ' + this.current);
         if (this.is('running')) {
             twitterApi.getRemainingCalls(self.config)
@@ -129,7 +128,7 @@ var Scraper = function (config, instanceId) {
         // if we can still make api calls
         if (twitterApiStatus.remaining > self.minRemainingCalls) {
             // search for tweets
-            searchTweetsCurrentQueryList(self.queryBuilder.queryList);
+            searchTweetsCurrentQueryList();
         }
         // otherwise set the timeout to the next reset time 
         else {
@@ -157,7 +156,8 @@ var Scraper = function (config, instanceId) {
      * search tweets in the query
      * @param {list of words to query twitter} queryList 
      */
-    function searchTweetsCurrentQueryList(queryList) {
+    function searchTweetsCurrentQueryList() {
+        var queryList = self.queryBuilder.queryList;
         var query = queryList[self.queryCount].join(' ');
         if (self.queryCount < queryList.length - 1) {
             self.queryCount++;
